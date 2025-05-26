@@ -46,11 +46,8 @@ class OpenTelemetryTestListenerTest {
                 "failure.Klass",
                 "stacktrace",
                 true,
-                false,
-                "true",
                 "false",
-                "true".toByteArray(),
-                "false".toByteArray(),
+                "true",
             )
 
         val testResult =
