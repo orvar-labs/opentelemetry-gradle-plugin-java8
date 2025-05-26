@@ -11,9 +11,7 @@ plugins {
     id "org.jetbrains.kotlin.jvm" version "1.9.22" // https://docs.gradle.org/current/userguide/compatibility.html#kotlin
     id "org.jetbrains.kotlin.plugin.serialization" version "1.9.22"
     id "org.jlleitschuh.gradle.ktlint" version "12.1.1"
-    id "dev.projektor.publish" version "8.7.0"
     id "com.gradle.plugin-publish" version "1.2.1"
-    id "com.atkinsondev.opentelemetry-build" version "1.13.0"
 }
 
 group = "com.atkinsondev"
@@ -68,15 +66,3 @@ ktlint {
     disabledRules = ["no-wildcard-imports"]
 }
 
-projektor {
-    serverUrl = "https://projektorlive.herokuapp.com"
-    publishToken = System.getenv("PROJEKTOR_TOKEN") ?: project.findProperty('projektor_publish_token') ?: null
-}
-
-openTelemetryBuild {
-    endpoint = System.getenv("OTEL_BUILD_ENDPOINT") ?: project.findProperty('otel_build_endpoint') ?: "https://api.honeycomb.io"
-    headers = [
-            "x-honeycomb-team": System.getenv("HONEYCOMB_API_KEY") ?: project.findProperty('honeycomb_api_key') ?: "",
-            "x-honeycomb-dataset": "otel-gradle"
-    ]
-}
