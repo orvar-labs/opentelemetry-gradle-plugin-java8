@@ -8,11 +8,15 @@ import io.opentelemetry.sdk.OpenTelemetrySdk
 import io.opentelemetry.sdk.resources.Resource
 import io.opentelemetry.sdk.trace.SdkTracerProvider
 import io.opentelemetry.sdk.trace.export.BatchSpanProcessor
-import io.opentelemetry.semconv.resource.attributes.ResourceAttributes.*
+import io.opentelemetry.semconv.ServiceAttributes.SERVICE_NAME
+import io.opentelemetry.semconv.TelemetryAttributes.TELEMETRY_SDK_NAME
+import io.opentelemetry.semconv.TelemetryAttributes.TELEMETRY_SDK_VERSION
 import org.gradle.api.logging.Logger
 import java.util.concurrent.TimeUnit
 
-class OpenTelemetryInit(private val logger: Logger) {
+class OpenTelemetryInit(
+    private val logger: Logger,
+) {
     fun init(
         endpoint: String,
         headers: Map<String, String>,
@@ -25,22 +29,22 @@ class OpenTelemetryInit(private val logger: Logger) {
         val customAttributes = customAttributesBuilder.build()
 
         val customResourceAttributes =
-            Resource.builder()
+            Resource
+                .builder()
                 .put(SERVICE_NAME, serviceName)
                 .put(TELEMETRY_SDK_NAME, SDK_NAME)
                 .put(TELEMETRY_SDK_VERSION, SDK_VERSION)
                 .putAll(customAttributes)
                 .build()
 
-        val resource: Resource =
-            Resource.getDefault()
-                .merge(customResourceAttributes)
+        val resource: Resource = Resource.getDefault().merge(customResourceAttributes)
 
         val spanExporter =
             when (exporterMode) {
                 OpenTelemetryExporterMode.GRPC -> {
                     val spanExporterBuilder =
-                        OtlpGrpcSpanExporter.builder()
+                        OtlpGrpcSpanExporter
+                            .builder()
                             .setTimeout(2, TimeUnit.SECONDS)
                             .setEndpoint(endpoint)
                             .addHeader("User-Agent", USER_AGENT_VALUE)
@@ -51,17 +55,15 @@ class OpenTelemetryInit(private val logger: Logger) {
                 }
 
                 OpenTelemetryExporterMode.ZIPKIN -> {
-                    val spanExporterBuilder =
-                        ZipkinSpanExporter.builder()
-                            .setReadTimeout(2, TimeUnit.SECONDS)
-                            .setEndpoint(endpoint)
+                    val spanExporterBuilder = ZipkinSpanExporter.builder().setReadTimeout(2, TimeUnit.SECONDS).setEndpoint(endpoint)
 
                     spanExporterBuilder.build()
                 }
 
                 else -> {
                     val spanExporterBuilder =
-                        OtlpHttpSpanExporter.builder()
+                        OtlpHttpSpanExporter
+                            .builder()
                             .setTimeout(2, TimeUnit.SECONDS)
                             .setEndpoint(endpoint)
                             .addHeader("User-Agent", USER_AGENT_VALUE)
@@ -75,18 +77,16 @@ class OpenTelemetryInit(private val logger: Logger) {
         logger.info("Registering OpenTelemetry with mode $exporterMode")
 
         val openTelemetrySdk =
-            OpenTelemetrySdk.builder()
+            OpenTelemetrySdk
+                .builder()
                 .setTracerProvider(
-                    SdkTracerProvider.builder()
+                    SdkTracerProvider
+                        .builder()
                         .setResource(resource)
                         .addSpanProcessor(
-                            BatchSpanProcessor.builder(spanExporter)
-                                .setScheduleDelay(100, TimeUnit.MILLISECONDS)
-                                .build(),
-                        )
-                        .build(),
-                )
-                .build()
+                            BatchSpanProcessor.builder(spanExporter).setScheduleDelay(100, TimeUnit.MILLISECONDS).build(),
+                        ).build(),
+                ).build()
 
         return openTelemetrySdk
     }

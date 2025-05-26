@@ -40,7 +40,8 @@ dependencies {
     implementation "io.opentelemetry:opentelemetry-sdk:$otelVersion"
     implementation "io.opentelemetry:opentelemetry-exporter-otlp:$otelVersion"
     implementation "io.opentelemetry:opentelemetry-exporter-zipkin:$otelVersion"
-    implementation "io.opentelemetry:opentelemetry-semconv:$otelSemConvVersion"
+    implementation "io.opentelemetry.semconv:opentelemetry-semconv:$otelSemConvVersion"
+    implementation("io.opentelemetry.proto:opentelemetry-proto:$otelProtoVersion")
 
     testImplementation gradleTestKit()
 
