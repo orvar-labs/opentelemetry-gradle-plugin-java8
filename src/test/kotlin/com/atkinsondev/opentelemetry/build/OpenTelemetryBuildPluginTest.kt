@@ -1,27 +1,29 @@
 package com.atkinsondev.opentelemetry.build
 
 import com.atkinsondev.opentelemetry.build.OpenTelemetryInit.Companion.USER_AGENT_VALUE
+import com.atkinsondev.opentelemetry.build.util.WireMockExtension
 import com.github.tomakehurst.wiremock.client.WireMock.*
-import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo
-import com.github.tomakehurst.wiremock.junit5.WireMockTest
 import org.awaitility.Awaitility.await
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.RegisterExtension
 import org.junit.jupiter.api.io.TempDir
 import strikt.api.expectThat
 import strikt.assertions.*
 import java.io.File
 import java.nio.file.Path
 
-@WireMockTest
 class OpenTelemetryBuildPluginTest {
+    @JvmField
+    @RegisterExtension
+    val wireMock = WireMockExtension()
+
     @Test
     fun `should send data to OpenTelemetry with HTTP`(
-        wmRuntimeInfo: WireMockRuntimeInfo,
         @TempDir projectRootDirPath: Path,
     ) {
-        val wiremockBaseUrl = wmRuntimeInfo.httpBaseUrl
+        val wiremockBaseUrl = wireMock.baseUrl()
 
         val buildFileContents =
             """
@@ -41,7 +43,8 @@ class OpenTelemetryBuildPluginTest {
         stubFor(post("/otel").willReturn(ok()))
 
         val buildResult =
-            GradleRunner.create()
+            GradleRunner
+                .create()
                 .withProjectDir(projectRootDirPath.toFile())
                 .withArguments("test", "--info", "--stacktrace")
                 .withPluginClasspath()
@@ -70,10 +73,9 @@ class OpenTelemetryBuildPluginTest {
 
     @Test
     fun `should include custom SDK name in OTel payload`(
-        wmRuntimeInfo: WireMockRuntimeInfo,
         @TempDir projectRootDirPath: Path,
     ) {
-        val wiremockBaseUrl = wmRuntimeInfo.httpBaseUrl
+        val wiremockBaseUrl = wireMock.baseUrl()
 
         val buildFileContents =
             """
@@ -93,7 +95,8 @@ class OpenTelemetryBuildPluginTest {
         stubFor(post("/otel").willReturn(ok()))
 
         val buildResult =
-            GradleRunner.create()
+            GradleRunner
+                .create()
                 .withProjectDir(projectRootDirPath.toFile())
                 .withArguments("test", "--info", "--stacktrace")
                 .withPluginClasspath()
@@ -113,10 +116,9 @@ class OpenTelemetryBuildPluginTest {
 
     @Test
     fun `should include user agent HTTP header`(
-        wmRuntimeInfo: WireMockRuntimeInfo,
         @TempDir projectRootDirPath: Path,
     ) {
-        val wiremockBaseUrl = wmRuntimeInfo.httpBaseUrl
+        val wiremockBaseUrl = wireMock.baseUrl()
 
         val buildFileContents =
             """
@@ -136,7 +138,8 @@ class OpenTelemetryBuildPluginTest {
         stubFor(post("/otel").willReturn(ok()))
 
         val buildResult =
-            GradleRunner.create()
+            GradleRunner
+                .create()
                 .withProjectDir(projectRootDirPath.toFile())
                 .withArguments("test", "--info", "--stacktrace")
                 .withPluginClasspath()
@@ -157,10 +160,9 @@ class OpenTelemetryBuildPluginTest {
 
     @Test
     fun `should send data to OpenTelemetry with HTTP and headers`(
-        wmRuntimeInfo: WireMockRuntimeInfo,
         @TempDir projectRootDirPath: Path,
     ) {
-        val wiremockBaseUrl = wmRuntimeInfo.httpBaseUrl
+        val wiremockBaseUrl = wireMock.baseUrl()
 
         val buildFileContents =
             """
@@ -181,7 +183,8 @@ class OpenTelemetryBuildPluginTest {
         stubFor(post("/otel").willReturn(ok()))
 
         val buildResult =
-            GradleRunner.create()
+            GradleRunner
+                .create()
                 .withProjectDir(projectRootDirPath.toFile())
                 .withArguments("test", "--info", "--stacktrace")
                 .withPluginClasspath()
@@ -201,10 +204,9 @@ class OpenTelemetryBuildPluginTest {
 
     @Test
     fun `should send data to OpenTelemetry with custom attributes`(
-        wmRuntimeInfo: WireMockRuntimeInfo,
         @TempDir projectRootDirPath: Path,
     ) {
-        val wiremockBaseUrl = wmRuntimeInfo.httpBaseUrl
+        val wiremockBaseUrl = wireMock.baseUrl()
 
         val buildFileContents =
             """
@@ -225,7 +227,8 @@ class OpenTelemetryBuildPluginTest {
         stubFor(post("/otel").willReturn(ok()))
 
         val buildResult =
-            GradleRunner.create()
+            GradleRunner
+                .create()
                 .withProjectDir(projectRootDirPath.toFile())
                 .withArguments("test", "--info", "--stacktrace")
                 .withPluginClasspath()
@@ -248,10 +251,9 @@ class OpenTelemetryBuildPluginTest {
 
     @Test
     fun `when test fails should send failure data`(
-        wmRuntimeInfo: WireMockRuntimeInfo,
         @TempDir projectRootDirPath: Path,
     ) {
-        val wiremockBaseUrl = wmRuntimeInfo.httpBaseUrl
+        val wiremockBaseUrl = wireMock.baseUrl()
 
         val buildFileContents =
             """
@@ -271,7 +273,8 @@ class OpenTelemetryBuildPluginTest {
         stubFor(post("/otel").willReturn(ok()))
 
         val buildResult =
-            GradleRunner.create()
+            GradleRunner
+                .create()
                 .withProjectDir(projectRootDirPath.toFile())
                 .withArguments("test", "--info", "--stacktrace")
                 .withPluginClasspath()
@@ -291,10 +294,9 @@ class OpenTelemetryBuildPluginTest {
 
     @Test
     fun `when plugin run in CI should include is-CI attribute`(
-        wmRuntimeInfo: WireMockRuntimeInfo,
         @TempDir projectRootDirPath: Path,
     ) {
-        val wiremockBaseUrl = wmRuntimeInfo.httpBaseUrl
+        val wiremockBaseUrl = wireMock.baseUrl()
 
         val buildFileContents =
             """
@@ -314,7 +316,8 @@ class OpenTelemetryBuildPluginTest {
         stubFor(post("/otel").willReturn(ok()))
 
         val buildResult =
-            GradleRunner.create()
+            GradleRunner
+                .create()
                 .withProjectDir(projectRootDirPath.toFile())
                 .withArguments("test", "--info", "--stacktrace")
                 .withEnvironment(mapOf("CI" to "true"))
@@ -338,10 +341,9 @@ class OpenTelemetryBuildPluginTest {
 
     @Test
     fun `should include task names`(
-        wmRuntimeInfo: WireMockRuntimeInfo,
         @TempDir projectRootDirPath: Path,
     ) {
-        val wiremockBaseUrl = wmRuntimeInfo.httpBaseUrl
+        val wiremockBaseUrl = wireMock.baseUrl()
 
         val buildFileContents =
             """
@@ -361,7 +363,8 @@ class OpenTelemetryBuildPluginTest {
         stubFor(post("/otel").willReturn(ok()))
 
         val buildResult =
-            GradleRunner.create()
+            GradleRunner
+                .create()
                 .withProjectDir(projectRootDirPath.toFile())
                 .withArguments("compileKotlin", "test", "--info")
                 .withPluginClasspath()
@@ -381,10 +384,9 @@ class OpenTelemetryBuildPluginTest {
 
     @Test
     fun `should include task type`(
-        wmRuntimeInfo: WireMockRuntimeInfo,
         @TempDir projectRootDirPath: Path,
     ) {
-        val wiremockBaseUrl = wmRuntimeInfo.httpBaseUrl
+        val wiremockBaseUrl = wireMock.baseUrl()
 
         val buildFileContents =
             """
@@ -404,7 +406,8 @@ class OpenTelemetryBuildPluginTest {
         stubFor(post("/otel").willReturn(ok()))
 
         val buildResult =
-            GradleRunner.create()
+            GradleRunner
+                .create()
                 .withProjectDir(projectRootDirPath.toFile())
                 .withArguments("compileKotlin", "test", "--info")
                 .withPluginClasspath()

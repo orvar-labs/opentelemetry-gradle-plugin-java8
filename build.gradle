@@ -8,14 +8,22 @@ buildscript {
 plugins {
     id "java-gradle-plugin"
     id "maven-publish"
-    id "org.jetbrains.kotlin.jvm" version "1.9.22" // https://docs.gradle.org/current/userguide/compatibility.html#kotlin
-    id "org.jetbrains.kotlin.plugin.serialization" version "1.9.22"
+    id "org.jetbrains.kotlin.jvm" version "1.9.10"
+    // https://docs.gradle.org/current/userguide/compatibility.html#kotlin
+    id "org.jetbrains.kotlin.plugin.serialization" version "1.9.10"
     id "org.jlleitschuh.gradle.ktlint" version "12.1.1"
     id "com.gradle.plugin-publish" version "1.2.1"
 }
 
 group = "com.atkinsondev"
 version = "1.14.0"
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+    compilerOptions {
+        apiVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_9
+        languageVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_9
+    }
+}
 
 gradlePlugin {
     website = 'https://github.com/craigatk/opentelemetry-gradle-plugin'
@@ -48,13 +56,17 @@ dependencies {
     testImplementation(platform("org.junit:junit-bom:5.10.2"))
     testImplementation "org.junit.jupiter:junit-jupiter"
 
-    testImplementation "org.wiremock:wiremock:3.6.0"
+    testImplementation "com.github.tomakehurst:wiremock-jre8:2.27.2"
     testImplementation "io.strikt:strikt-core:0.34.1"
     testImplementation "org.awaitility:awaitility-kotlin:4.2.1"
     testImplementation "io.mockk:mockk:1.13.11"
     testImplementation "org.testcontainers:testcontainers:1.19.8"
     testImplementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3"
     testImplementation "com.squareup.okhttp3:okhttp:4.12.0"
+    testImplementation("io.grpc:grpc-netty:1.61.0")
+    testImplementation("io.grpc:grpc-protobuf:1.61.0")
+    testImplementation("io.grpc:grpc-stub:1.61.0")
+    testImplementation("io.grpc:grpc-inprocess:1.61.0")
 }
 
 test {

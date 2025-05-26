@@ -1,12 +1,12 @@
 package com.atkinsondev.opentelemetry.build
 
+import com.atkinsondev.opentelemetry.build.util.WireMockExtension
 import com.github.tomakehurst.wiremock.client.WireMock.*
-import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo
-import com.github.tomakehurst.wiremock.junit5.WireMockTest
 import org.awaitility.Awaitility.await
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.RegisterExtension
 import org.junit.jupiter.api.io.TempDir
 import strikt.api.expectThat
 import strikt.assertions.contains
@@ -15,14 +15,16 @@ import strikt.assertions.isNotEmpty
 import java.io.File
 import java.nio.file.Path
 
-@WireMockTest
 class OpenTelemetryBuildPluginRemoteParentTraceTest {
+    @JvmField
+    @RegisterExtension
+    val wireMock = WireMockExtension()
+
     @Test
     fun `when valid parent span and trace environment variables set should use them`(
-        wmRuntimeInfo: WireMockRuntimeInfo,
         @TempDir projectRootDirPath: Path,
     ) {
-        val wiremockBaseUrl = wmRuntimeInfo.httpBaseUrl
+        val wiremockBaseUrl = wireMock.baseUrl()
 
         val buildFileContents =
             """
@@ -42,7 +44,8 @@ class OpenTelemetryBuildPluginRemoteParentTraceTest {
         stubFor(post("/otel").willReturn(ok()))
 
         val buildResult =
-            GradleRunner.create()
+            GradleRunner
+                .create()
                 .withProjectDir(projectRootDirPath.toFile())
                 .withArguments("test", "--info", "--stacktrace")
                 .withEnvironment(mapOf("SPAN_ID" to "f1a2153e247b0d94", "TRACE_ID" to "a263fdf001993a32980b9ec5740b7d6d"))
@@ -69,10 +72,9 @@ class OpenTelemetryBuildPluginRemoteParentTraceTest {
 
     @Test
     fun `when no parent trace or span should not log invalid-parent error message`(
-        wmRuntimeInfo: WireMockRuntimeInfo,
         @TempDir projectRootDirPath: Path,
     ) {
-        val wiremockBaseUrl = wmRuntimeInfo.httpBaseUrl
+        val wiremockBaseUrl = wireMock.baseUrl()
 
         val buildFileContents =
             """
@@ -92,7 +94,8 @@ class OpenTelemetryBuildPluginRemoteParentTraceTest {
         stubFor(post("/otel").willReturn(ok()))
 
         val buildResult =
-            GradleRunner.create()
+            GradleRunner
+                .create()
                 .withProjectDir(projectRootDirPath.toFile())
                 .withArguments("test", "--info")
                 .withPluginClasspath()

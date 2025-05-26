@@ -1,11 +1,11 @@
 package com.atkinsondev.opentelemetry.build
 
+import com.atkinsondev.opentelemetry.build.util.WireMockExtension
 import com.github.tomakehurst.wiremock.client.WireMock
-import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo
-import com.github.tomakehurst.wiremock.junit5.WireMockTest
 import org.awaitility.Awaitility
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
+import org.junit.jupiter.api.extension.RegisterExtension
 import org.junit.jupiter.api.io.TempDir
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
@@ -15,16 +15,18 @@ import strikt.assertions.isNotNull
 import java.io.File
 import java.nio.file.Path
 
-@WireMockTest
 class OpenTelemetryBuildPluginKotlinScriptTest {
+    @JvmField
+    @RegisterExtension
+    val wireMock = WireMockExtension()
+
     @ParameterizedTest
     @ValueSource(strings = ["7.6.3", "8.5"])
     fun `should send data to OpenTelemetry when using a Kotlin build script`(
         gradleVersion: String,
-        wmRuntimeInfo: WireMockRuntimeInfo,
         @TempDir projectRootDirPath: Path,
     ) {
-        val wiremockBaseUrl = wmRuntimeInfo.httpBaseUrl
+        val wiremockBaseUrl = wireMock.baseUrl()
 
         val buildFileContents =
             """
@@ -44,7 +46,8 @@ class OpenTelemetryBuildPluginKotlinScriptTest {
         WireMock.stubFor(WireMock.post("/otel").willReturn(WireMock.ok()))
 
         val buildResult =
-            GradleRunner.create()
+            GradleRunner
+                .create()
                 .withProjectDir(projectRootDirPath.toFile())
                 .withArguments("test", "--info", "--stacktrace")
                 .withPluginClasspath()
