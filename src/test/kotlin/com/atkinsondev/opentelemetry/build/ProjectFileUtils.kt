@@ -63,7 +63,7 @@ fun baseBuildFileContents(): String =
     }
     
     plugins {
-        id "com.atkinsondev.opentelemetry-build"
+        id "be.orvar.opentelemetry-build-java8"
         id "org.jetbrains.kotlin.jvm" version "1.6.21"
     }
     
@@ -91,7 +91,7 @@ fun baseKotlinBuildFileContents(): String =
 
     plugins {
         id("org.jetbrains.kotlin.jvm") version "1.9.10"
-        id("com.atkinsondev.opentelemetry-build")
+        id("be.orvar.opentelemetry-build-java8")
     }
     
     repositories {
