@@ -15,8 +15,8 @@ plugins {
     id "com.gradle.plugin-publish" version "1.2.1"
 }
 
-group = "com.atkinsondev"
-version = "1.14.0"
+group = "be.orvar"
+version = "1.14.0-java8"
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
     compilerOptions {
@@ -26,13 +26,13 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
 }
 
 gradlePlugin {
-    website = 'https://github.com/craigatk/opentelemetry-gradle-plugin'
-    vcsUrl = 'https://github.com/craigatk/opentelemetry-gradle-plugin'
+    website = 'https://github.com/orvar-labs/opentelemetry-gradle-plugin-java8'
+    vcsUrl = 'https://github.com/orvar-labs/opentelemetry-gradle-plugin-java8'
     plugins {
         opentelemetryPlugin {
-            id = 'com.atkinsondev.opentelemetry-build'
+            id = 'be.orvar.opentelemetry-build-java8'
             implementationClass = 'com.atkinsondev.opentelemetry.build.OpenTelemetryBuildPlugin'
-            displayName = 'OpenTelemetry build plugin'
+            displayName = 'OpenTelemetry build plugin - Java 8'
             description = 'Instrument your Gradle build with OpenTelemetry observability to find and eliminate build bottlenecks'
             tags.addAll(['observability', 'opentelemetry', 'telemetry'])
         }

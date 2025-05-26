@@ -1,3 +1,27 @@
+## About this fork
+
+This project is a fork of [opentelemetry-gradle-plugin](https://github.com/craigatk/opentelemetry-gradle-plugin),
+licensed under the Apache License 2.0.
+
+Modifications include:
+
+- Gradle 7.6 / Java 8 compatibility changes
+- OpenTelemetry upgrade
+- Adjustments to Gradle plugin ID, building and testing infrastructure
+
+All original rights and license terms are preserved.
+
+### Possible issues
+
+`Unable to load class 'kotlin.enums.EnumEntriesKt'.`: an older version of kotlin is being used by your gradle build, add
+specific version:
+
+```
+plugins {
+  id("org.jetbrains.kotlin.jvm").version("1.9.10")
+}
+```
+
 # Gradle OpenTelemetry build plugin
 
 Find the slowest parts of your build with the Gradle OpenTelemetry build plugin. This plugin instruments your build
