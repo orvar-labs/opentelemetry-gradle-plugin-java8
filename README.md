@@ -3,22 +3,40 @@
 This project is a fork of [opentelemetry-gradle-plugin](https://github.com/craigatk/opentelemetry-gradle-plugin),
 licensed under the Apache License 2.0.
 
-Modifications include:
+### ✅ Fork purpose
 
-- Gradle 7.6 / Java 8 compatibility changes
-- OpenTelemetry upgrade
-- Adjustments to Gradle plugin ID, building and testing infrastructure
+This version (`1.14.0-java8`) provides:
+- Compatibility with **Gradle 7.6** and **Java 8**
+- An upgrade to a newer version of the OpenTelemetry SDK
+- Adjustments to plugin ID, testing infrastructure and dependency constraints
 
-All original rights and license terms are preserved.
+All original rights and license terms are preserved. See the upstream project for the original source and license.
 
-### Possible issues
+> ⚠️ Note: This fork is maintained for legacy projects that cannot upgrade to Java 11+.
 
-`Unable to load class 'kotlin.enums.EnumEntriesKt'.`: an older version of kotlin is being used by your gradle build, add
-specific version:
+---
 
-```
+### 🚀 How to use this fork
+
+In your `build.gradle.kts`:
+
+```kotlin
 plugins {
-  id("org.jetbrains.kotlin.jvm").version("1.9.10")
+    id("be.orvar.opentelemetry-build-java8") version "1.14.0-java8"
+}
+```
+
+---
+
+### 🛠️ Known issues
+
+You may encounter: `Unable to load class 'kotlin.enums.EnumEntriesKt'.`
+
+This is due to Gradle using an older Kotlin version. To resolve it, explicitly specify a compatible version:
+
+```kotlin
+plugins {
+    id("org.jetbrains.kotlin.jvm") version "1.9.10"
 }
 ```
 
