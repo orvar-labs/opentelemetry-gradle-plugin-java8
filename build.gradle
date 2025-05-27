@@ -121,7 +121,7 @@ publishing {
 
     repositories {
         maven {
-            name = "staging-deploy"
+            name = "stagingDeploy"
             url = layout.buildDirectory.dir('staging-deploy')
         }
     }
