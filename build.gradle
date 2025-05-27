@@ -25,6 +25,11 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
     }
 }
 
+tasks.withType(AbstractArchiveTask).configureEach {
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+}
+
 gradlePlugin {
     website = 'https://github.com/orvar-labs/opentelemetry-gradle-plugin-java8'
     vcsUrl = 'https://github.com/orvar-labs/opentelemetry-gradle-plugin-java8'
