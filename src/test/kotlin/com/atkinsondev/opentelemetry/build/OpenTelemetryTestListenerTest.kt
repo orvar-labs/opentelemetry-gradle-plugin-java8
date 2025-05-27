@@ -22,8 +22,8 @@ class OpenTelemetryTestListenerTest {
 
         val span = mockk<Span>()
 
-        every { span.setAttribute(any(String::class), any(Boolean::class)) } returns span
-        every { span.setAttribute(any(String::class), any(String::class)) } returns span
+        every { span.setAttribute(any() as String, any() as Boolean) } returns span
+        every { span.setAttribute(any() as String, any() as String) } returns span
         every { span.end() } returns Unit
 
         val spanBuilder = FakeSpanBuilder(span)
@@ -74,8 +74,8 @@ class OpenTelemetryTestListenerTest {
 
         val span = mockk<Span>()
 
-        every { span.setAttribute(any(String::class), any(Boolean::class)) } returns span
-        every { span.setAttribute(any(String::class), any(String::class)) } returns span
+        every { span.setAttribute(any() as String, any() as Boolean) } returns span
+        every { span.setAttribute(any() as String, any() as String) } returns span
         every { span.end() } returns Unit
 
         val spanBuilder = FakeSpanBuilder(span)
@@ -106,7 +106,7 @@ class OpenTelemetryTestListenerTest {
         openTelemetryTestListener.beforeTest(testDescriptor)
         openTelemetryTestListener.afterTest(testDescriptor, testResult)
 
-        verify(exactly = 0) { span.setAttribute(OpenTelemetryBuildSpanData.ERROR_KEY, any(Boolean::class)) }
-        verify(exactly = 0) { span.setAttribute(OpenTelemetryBuildSpanData.ERROR_MESSAGE_KEY, any(String::class)) }
+        verify(exactly = 0) { span.setAttribute(OpenTelemetryBuildSpanData.ERROR_KEY, any() as Boolean) }
+        verify(exactly = 0) { span.setAttribute(OpenTelemetryBuildSpanData.ERROR_MESSAGE_KEY, any() as String) }
     }
 }

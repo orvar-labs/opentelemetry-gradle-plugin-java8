@@ -90,7 +90,7 @@ fun baseKotlinBuildFileContents(): String =
     }
 
     plugins {
-        id("org.jetbrains.kotlin.jvm") version "1.9.10"
+        id("org.jetbrains.kotlin.jvm") version "1.7.10"
         id("be.orvar.opentelemetry-build-java8")
     }
     

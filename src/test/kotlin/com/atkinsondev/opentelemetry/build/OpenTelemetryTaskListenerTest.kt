@@ -7,7 +7,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import io.opentelemetry.api.baggage.Baggage
-import io.opentelemetry.api.trace.*
+import io.opentelemetry.api.trace.Span
 import org.gradle.api.internal.tasks.TaskExecutionOutcome
 import org.gradle.api.internal.tasks.TaskStateInternal
 import org.junit.jupiter.api.Test
@@ -19,8 +19,8 @@ class OpenTelemetryTaskListenerTest {
 
         val span = mockk<Span>()
 
-        every { span.setAttribute(any(String::class), any(Boolean::class)) } returns span
-        every { span.setAttribute(any(String::class), any(String::class)) } returns span
+        every { span.setAttribute(any() as String, any() as Boolean) } returns span
+        every { span.setAttribute(any() as String, any() as String) } returns span
         every { span.end() } returns Unit
 
         val spanBuilder = FakeSpanBuilder(span)
@@ -55,8 +55,8 @@ class OpenTelemetryTaskListenerTest {
 
         val span = mockk<Span>()
 
-        every { span.setAttribute(any(String::class), any(Boolean::class)) } returns span
-        every { span.setAttribute(any(String::class), any(String::class)) } returns span
+        every { span.setAttribute(any() as String, any() as Boolean) } returns span
+        every { span.setAttribute(any() as String, any() as String) } returns span
         every { span.end() } returns Unit
 
         val spanBuilder = FakeSpanBuilder(span)
