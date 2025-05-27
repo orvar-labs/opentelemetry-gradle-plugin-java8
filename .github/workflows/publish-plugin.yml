@@ -22,10 +22,10 @@ jobs:
           cache: 'gradle'
 
       - name: Load jreleaser config
-          run: |
-            mkdir -p "$HOME/.jreleaser"
-            echo "${{ secrets.JRELEASER_CONFIG_B64 }}" | base64 -d > "$HOME/.jreleaser/config.toml"
-            chmod 600 "$HOME/.jreleaser/config.toml"
+        run: |
+          mkdir -p "$HOME/.jreleaser"
+          echo "${{ secrets.JRELEASER_CONFIG_B64 }}" | base64 -d > "$HOME/.jreleaser/config.toml"
+          chmod 600 "$HOME/.jreleaser/config.toml"
 
       - name: Build
         run: ./gradlew :build
