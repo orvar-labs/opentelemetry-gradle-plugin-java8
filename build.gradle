@@ -17,7 +17,7 @@ plugins {
 }
 
 group = "be.orvar"
-version = "1.14.0-java8"
+version = "1.14.0-java8+001"
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
     compilerOptions {
@@ -89,9 +89,10 @@ publishing {
     publications {
         mavenCentral(MavenPublication) {
             from components.java
+            artifactId = 'opentelemetry-build-java8'
 
             pom {
-                name = 'opentelemetry-gradle-plugin-java8'
+                name = 'opentelemetry-build-java8'
                 description = 'Instrument your Gradle build with OpenTelemetry observability to find and eliminate build bottlenecks'
                 url = 'https://github.com/orvar-labs/opentelemetry-gradle-plugin-java8'
                 inceptionYear = '2025'
