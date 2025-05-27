@@ -21,8 +21,17 @@ jobs:
           distribution: 'temurin'
           cache: 'gradle'
 
+      - name: Load jreleaser config
+          run: |
+            mkdir -p "$HOME/.jreleaser"
+            echo "${{ secrets.JRELEASER_CONFIG_B64 }}" | base64 -d > "$HOME/.jreleaser/config.toml"
+            chmod 600 "$HOME/.jreleaser/config.toml"
+
       - name: Build
         run: ./gradlew :build
 
-      - name: Publish plugin
-        run: ./gradlew :publishPlugin -Pgradle.publish.key=${{ secrets.GRADLE_PUBLISH_KEY }} -Pgradle.publish.secret=${{ secrets.GRADLE_PUBLISH_SECRET }}
+      - name: Publish to Maven Central
+        run: ./gradlew :jreleaserFullRelease
+
+#      - name: Publish to Gradle Plugin Portal
+#        run: ./gradlew :publishPlugin -Pgradle.publish.key=${{ secrets.GRADLE_PUBLISH_KEY }} -Pgradle.publish.secret=${{ secrets.GRADLE_PUBLISH_SECRET }}

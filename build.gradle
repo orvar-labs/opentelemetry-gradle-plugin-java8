@@ -13,6 +13,7 @@ plugins {
     id "org.jetbrains.kotlin.plugin.serialization" version "1.9.10"
     id "org.jlleitschuh.gradle.ktlint" version "12.1.1"
     id "com.gradle.plugin-publish" version "1.2.1"
+    id 'org.jreleaser' version '1.18.0'
 }
 
 group = "be.orvar"
@@ -84,3 +85,62 @@ ktlint {
     disabledRules = ["no-wildcard-imports"]
 }
 
+publishing {
+    publications {
+        mavenCentral(MavenPublication) {
+            from components.java
+
+            pom {
+                name = 'opentelemetry-gradle-plugin-java8'
+                description = 'Instrument your Gradle build with OpenTelemetry observability to find and eliminate build bottlenecks'
+                url = 'https://github.com/orvar-labs/opentelemetry-gradle-plugin-java8'
+                inceptionYear = '2025'
+                licenses {
+                    license {
+                        name = 'Apache-2.0'
+                        url = 'https://spdx.org/licenses/Apache-2.0.html'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'tomjo'
+                        name = 'Tom Jorissen'
+                        email = 'tom.jorissen@orvar.be'
+                        organization = 'Orvar'
+                        organizationUrl = 'https://www.orvar.be'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:https://github.com/orvar-labs/opentelemetry-gradle-plugin-java8.git'
+                    developerConnection = 'scm:git:ssh://github.com:orvar-labs/opentelemetry-gradle-plugin-java8.git'
+                    url = 'https://github.com/orvar-labs/opentelemetry-gradle-plugin-java8'
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            name = "staging-deploy"
+            url = layout.buildDirectory.dir('staging-deploy')
+        }
+    }
+}
+
+jreleaser {
+    signing {
+        active = 'ALWAYS'
+        armored = true
+    }
+    deploy {
+        maven {
+            mavenCentral {
+                sonatype {
+                    active = 'ALWAYS'
+                    url = 'https://central.sonatype.com/api/v1/publisher'
+                    stagingRepository('build/staging-deploy')
+                }
+            }
+        }
+    }
+}
