@@ -42,7 +42,7 @@ jobs:
         run: ./gradlew :publishMavenCentralPublicationToStagingDeployRepository --full-stacktrace
 
       - name: Publish to Maven Central
-        run: ./gradlew :jreleaserUpload --full-stacktrace
+        run: ./gradlew :jreleaserDeploy --full-stacktrace
 
       - name: Publish to Gradle Plugin Portal
         run: ./gradlew :publishPlugin -Pgradle.publish.key=${{ secrets.GRADLE_PUBLISH_KEY }} -Pgradle.publish.secret=${{ secrets.GRADLE_PUBLISH_SECRET }} --full-stacktrace
