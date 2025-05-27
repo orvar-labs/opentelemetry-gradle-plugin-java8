@@ -5,7 +5,7 @@ licensed under the Apache License 2.0.
 
 ### ✅ Fork purpose
 
-This version (`1.14.0-java8+002`) provides:
+This version (`1.14.0-java8.1`) provides:
 - Compatibility with **Gradle 7.6** and **Java 8**
 - Kotlin version downgraded to 1.7 to not force consumers to include a newer Kotlin version on older Gradle versions
 - An upgrade to a newer version of the OpenTelemetry SDK
@@ -23,7 +23,7 @@ In your `build.gradle.kts`:
 
 ```kotlin
 plugins {
-    id("be.orvar.opentelemetry-build-java8") version "1.14.0-java8+002"
+    id("be.orvar.opentelemetry-build-java8") version "1.14.0-java8.1"
 }
 ```
 

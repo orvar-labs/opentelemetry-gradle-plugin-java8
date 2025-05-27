@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "be.orvar"
-version = "1.14.0-java8+002"
+version = "1.14.0-java8.1"
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
     kotlinOptions {
