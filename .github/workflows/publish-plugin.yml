@@ -3,6 +3,11 @@ on:
     # Sequence of patterns matched against refs/tags
     tags:
       - 'v*' # Push events to matching v*, i.e. v1.0.1
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'tag'
+        required: true
 
 name: Release Gradle plugin
 
